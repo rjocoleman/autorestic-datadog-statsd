@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/DataDog/datadog-go/v5 v5.3.0
 	github.com/alecthomas/kong v0.8.0
-	github.com/golang/mock v1.6.0
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/mock v0.1.0
 )

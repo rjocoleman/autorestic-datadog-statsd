@@ -1,6 +1,6 @@
 # Autorestic Datadog Notifier
 
-This CLI application (`autorestic-dd-notify`) is designed to work with [Autorestic](https://github.com/cupcakearmy/autorestic) and [Datadog's StatsD](https://docs.datadoghq.com/developers/dogstatsd/) to report metrics for backup events.
+This CLI application (`autorestic-datadog-statsd`) is designed to work with [Autorestic](https://github.com/cupcakearmy/autorestic) and [Datadog's StatsD](https://docs.datadoghq.com/developers/dogstatsd/) to report metrics for backup events.
 
 It enables sending custom events and metrics for different backup states (before, after, success, failure) to Datadog using the StatsD protocol. This tool is particularly useful for gaining insights into your Autorestic backup processes through the visualization and alerting capabilities of Datadog.
 
@@ -9,6 +9,12 @@ It enables sending custom events and metrics for different backup states (before
 1. [Autorestic](https://github.com/cupcakearmy/autorestic) - This application is designed to work with Autorestic, it uses the environment variables provided by Autorestic to gather metrics.
 
 2. [Datadog Agent](https://docs.datadoghq.com/agent/) - Ensure the Datadog Agent is running either on your machine or somewhere accessible via a network.
+
+## Installation
+
+Grab the latest binary version from [GitHub releases](https://github.com/rjocoleman/autorestic-datadog-statsd/releases)
+
+There is also a Docker image provided that bundles the latest version of [Autorestic](https://github.com/cupcakearmy/autorestic) available [here](https://github.com/users/rjocoleman/packages?repo_name=autorestic-datadog-statsd)
 
 ## Usage
 
@@ -31,25 +37,25 @@ Here are some examples of how you could use this tool with different backup hook
 1. Before backup:
 
 ```shell
-./autorestic-dd-notify --state before --send-event --event-message "Before backup hook running"
+./autorestic-datadog-statsd --state before --send-event --event-message "Before backup hook running"
 ```
 
 2. After backup:
 
 ```shell
-./autorestic-dd-notify --state after --send-event --event-message "Finished backup process" --send-metrics
+./autorestic-datadog-statsd --state after --send-event --event-message "Finished backup process" --send-metrics
 ```
 
 3. Backup failure:
 
 ```shell
-./autorestic-dd-notify --state failure --send-event --event-message "Backup process failed" --send-service-check
+./autorestic-datadog-statsd --state failure --send-event --event-message "Backup process failed" --send-service-check
 ```
 
 4. Backup success:
 
 ```shell
-./autorestic-dd-notify --state success --send-event --event-message "Backup process succeeded" --send-metrics --send-service-check
+./autorestic-datadog-statsd --state success --send-event --event-message "Backup process succeeded" --send-metrics --send-service-check
 ```
 
 ## Autorestic Example
@@ -63,21 +69,21 @@ locations:
     to: my-backend
     hooks:
       before:
-        - autorestic-dd-notify --state before --event-message "Backup before hook: starting One" --send-event
+        - autorestic-datadog-statsd --state before --event-message "Backup before hook: starting One" --send-event
         - echo "One"
-        - autorestic-dd-notify --state before --event-message "Backup before hook: completed One" --send-event
+        - autorestic-datadog-statsd --state before --event-message "Backup before hook: completed One" --send-event
         - echo "Two"
         - echo "Three"
-        - autorestic-dd-notify --state before --event-message "Backup before hooks finished" --send-event
+        - autorestic-datadog-statsd --state before --event-message "Backup before hooks finished" --send-event
       after:
         - echo "Byte"
-        - autorestic-dd-notify --state after --event-message "Finished backup process" --send-event --send-metrics
+        - autorestic-datadog-statsd --state after --event-message "Finished backup process" --send-event --send-metrics
       failure:
         - echo "Something went wrong"
-        - autorestic-dd-notify --state failure --event-message "Backup process failed" --send-event --send-service-check
+        - autorestic-datadog-statsd --state failure --event-message "Backup process failed" --send-event --send-service-check
       success:
         - echo "Well done!"
-        - autorestic-dd-notify --state success --event-message "Backup process succeeded" --send-event --send-metrics --send-service-check
+        - autorestic-datadog-statsd --state success --event-message "Backup process succeeded" --send-event --send-metrics --send-service-check
 ```
 
 ## Docker Usage

@@ -12,7 +12,15 @@ import (
 	"github.com/alecthomas/kong"
 )
 
+var (
+	version = "dev"     // -ldflags "-X main.version=1.0.0"
+	commit  = "none"    // -ldflags "-X main.commit=b54296e"
+	date    = "unknown" // -ldflags "-X main.date=$(date)"
+)
+
 type CLI struct {
+	Version kong.VersionFlag
+
 	State            string `kong:"required,help='State of the backup process.',enum='before,after,success,failure'"`
 	EventMessage     string `kong:"optional,name='event-message',help='Additional message to add to the event.'"`
 	SendMetrics      bool   `kong:"optional,name='send-metrics',default='false',help='Flag to send metrics.'"`
@@ -30,7 +38,9 @@ type StatsDClient interface {
 var cli CLI
 
 func main() {
-	kong.Parse(&cli)
+	kong.Parse(&cli, kong.Vars{
+		"version": fmt.Sprintf("autorestic-datadog-statsd: %s, commit %s, built at %s", version, commit, date),
+	})
 
 	if cli.StatsdAddress == "" {
 		log.Fatal("DATADOG_STATSD_ADDRESS environment variable or CLI parameter not set")
