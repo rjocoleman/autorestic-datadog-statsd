@@ -43,7 +43,7 @@ func main() {
 	})
 
 	if cli.StatsdAddress == "" {
-		log.Fatal("DATADOG_STATSD_ADDRESS environment variable or CLI parameter not set")
+		log.Fatal("DD_DOGSTATSD_URL environment variable or CLI parameter not set")
 	}
 
 	client, err := statsd.New(cli.StatsdAddress)
